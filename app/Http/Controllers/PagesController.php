@@ -13,4 +13,8 @@ class PagesController extends Controller
     public function checkout() {
         return view('checkout');
     }
+
+    public function login() {
+        return view('login');
+    }
 }

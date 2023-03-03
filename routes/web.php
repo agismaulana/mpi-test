@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PagesController::class, 'home'])->name('home');
+Route::get('/login', [PagesController::class, 'login'])->name('home');
+Route::get('/checkout', [PagesController::class, 'checkout'])->name('home');

@@ -35,4 +35,8 @@ class Transaction extends Model
 
         return parent::save($options);
     }
+
+    public function detail() {
+        return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
+    }
 }

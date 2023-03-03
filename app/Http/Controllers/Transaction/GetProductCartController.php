@@ -10,7 +10,7 @@ class GetProductCartController extends Controller
 {
     public function __invoke(Request $request) {
         $current_user = auth('api')->user();
-        $product_cart = ProductCart::query();
+        $product_cart = ProductCart::query()->with('product');
         if($current_user->role == 'user')
             $product_cart->where('user_id', $current_user->id);
 

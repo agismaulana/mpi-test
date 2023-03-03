@@ -22,6 +22,11 @@ class LoginController extends Controller
     }
 
     public function web() {
-        return 'oke';
+        $credentials = request(['email', 'password']);
+        if (!$token = auth('api')->attempt($credentials)) {
+            return $this->sendError(__('Email / Password is not correct'), Response::HTTP_FORBIDDEN);
+        }
+
+        return redirect('/')->with(['message' => 'Login Successfully']);
     }
 }
