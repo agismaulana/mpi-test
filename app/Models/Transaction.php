@@ -39,4 +39,8 @@ class Transaction extends Model
     public function detail() {
         return $this->hasMany(TransactionDetail::class, 'transaction_id', 'id');
     }
+
+    public function latestPayment() {
+        return $this->hasMany(Payment::class, 'transaction_id', 'id')->latest();
+    }
 }

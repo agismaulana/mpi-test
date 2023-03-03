@@ -46,6 +46,9 @@ class CreatePaymentController extends Controller
         $payment->bank_type = $va->va_numbers[0]->bank;
         $payment->save();
 
+        $transaction->status = 'waiting';
+        $transaction->save();
+
         return $this->sendSuccess([
             'data' => [
                 'code' => $request->route('code')

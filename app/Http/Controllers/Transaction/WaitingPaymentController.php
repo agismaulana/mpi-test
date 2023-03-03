@@ -10,7 +10,11 @@ class WaitingPaymentController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $transaction = Transaction::query()->with(['transaction'])->where('code_transaction', $request->route('code'))->first();
+        $transaction = Transaction::query()
+        ->with(['detail', 'detail.product', 'latestPayment'])
+        ->where('code_transaction', $request->route('code'))
+        ->first();
+
         if(empty($transaction))
             return $this->sendError(__("Transaction not found"));
 

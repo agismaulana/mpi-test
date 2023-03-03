@@ -32,6 +32,7 @@
                 <div class="flex justify-between text-base font-medium text-gray-900">
                     <p>Subtotal</p>
                     <p>Rp. <span id="total">0</span></p>
+                    <input type="hidden" value="0" name="total_price">
                 </div>
                 <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                 <div class="mt-6">
@@ -118,7 +119,7 @@
             $.ajax({
                 url: `{{ env('APP_URL') }}/api/product-cart`,
                 headers: {
-                    'Authorization': 'Bearer {{ auth('web')->user()->getToken() ?? '' }}'
+                    'Authorization': 'Bearer {{ auth("web")->user() != null ? auth("web")->user()->getToken() : "" }}'
                 },
                 method: 'GET',
                 dataType: 'JSON',
@@ -140,17 +141,17 @@
                                         <div class="flex justify-between text-base font-medium text-gray-900">
                                             <h3>
                                                 <a href="#">${value.product.title}</a>
-                                                <input type="hidden" name="product[][product_id]" value="${value.product.id}">
+                                                <input type="hidden" name="products[${key}][product_id]" value="${value.product.id}">
                                             </h3>
                                             <p class="ml-4">Rp. ${value.product.price}</p>
-                                            <input type="hidden" name="product[][price]" value="${value.product.id}">
+                                            <input type="hidden" name="products[${key}][price]" value="${value.price}">
                                         </div>
                                         <p class="mt-1 text-sm text-gray-500">${value.product.category}</p>
                                     </div>
                                     <div class="flex flex-1 items-end justify-between text-sm">
                                         <p class="text-gray-500">Qty ${value.quantity}</p>
-                                        <input type="hidden" name="product[][quantity]" value="${value.quantity}">
-                                        <input type="hidden" name="product[][total_price]" value="${value.quantity * value.price}">
+                                        <input type="hidden" name="products[${key}][quantity]" value="${value.quantity}">
+                                        <input type="hidden" name="products[${key}][total_price]" value="${value.quantity * value.price}">
                                         <div class="flex">
                                             <button type="button"
                                                 class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
@@ -161,6 +162,7 @@
                         `
                     })
                     $('#total').html(total)
+                    $('input[name="total_price"]').val(total)
                     $('#checkout').html(html)
                 }
             })

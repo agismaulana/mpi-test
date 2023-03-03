@@ -6,15 +6,19 @@ use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
-    public function home() {
+    public function home(Request $request) {
         return view('home');
     }
 
-    public function checkout() {
+    public function checkout(Request $request) {
         return view('checkout');
     }
 
-    public function login() {
+    public function login(Request $request) {
         return view('login');
+    }
+
+    public function waiting(Request $request) {
+        return view('waiting');
     }
 }

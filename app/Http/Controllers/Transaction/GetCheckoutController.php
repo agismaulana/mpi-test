@@ -9,7 +9,7 @@ use App\Models\Transaction;
 class GetCheckoutController extends Controller
 {
     public function __invoke(Request $request) {
-        $checkout = Transaction::query()->where('code_transaction', $request->route('code'))->first();
+        $checkout = Transaction::query()->with(['detail', 'detail.product'])->where('code_transaction', $request->route('code'))->first();
         if(empty($checkout))
             return $this->sendError(__("checkout not found"));
 

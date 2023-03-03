@@ -7,6 +7,7 @@ use App\Http\Controllers\Transaction\AddToCartController;
 use App\Http\Controllers\Transaction\CheckoutController;
 use App\Http\Controllers\Transaction\CreatePaymentController;
 use App\Http\Controllers\Transaction\GetCheckoutController;
+use App\Http\Controllers\Transaction\WaitingPaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,4 +34,4 @@ Route::get('product-cart', GetProductCartController::class)->name('api.product-c
 Route::post('checkout', CheckoutController::class)->name('api.checkout.store');
 Route::get('checkout/{code}', GetCheckoutController::class)->name('api.checkout.index');
 Route::post('checkout/{code}/payment', CreatePaymentController::class)->name('api.payment.store');
-// Route::get('waiting')
+Route::get('checkout/{code}/waiting', WaitingPaymentController::class)->name('api.waiting');
