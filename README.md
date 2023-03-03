@@ -16,9 +16,9 @@
         <br />
         1. "php artisan migrate:fresh" <br />
         2. "php artisan db:seed --class DatabaseSeeder" <br />
-        3. "php artisan cache:clear"
-        4. "php artisan view:clear"
-        5. "php artisan config:cache"
-        6. "php artisan config:clear"
+        3. "php artisan cache:clear" <br />
+        4. "php artisan view:clear" <br />
+        5. "php artisan config:cache" <br />
+        6. "php artisan config:clear" <br />
    </li>
 <ol>
