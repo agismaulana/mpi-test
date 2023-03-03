@@ -11,6 +11,8 @@ use Illuminate\Http\Response;
 class CheckoutController extends Controller
 {
     public function __invoke(Request $request) {
+        dd($request);
+
         $transaction = new Transaction();
         $transaction->fill($request->all());
         $transaction->status = 'checkout';

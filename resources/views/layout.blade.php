@@ -35,8 +35,11 @@
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:gap-x-12 lg:justify-end">
                 <a href="{{ route('home') }}" class="text-sm font-semibold leading-6 text-gray-900">Products</a>
-                <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Log in <span
-                        aria-hidden="true">&rarr;</span></a>
+                @auth
+                    <a href="{{ route('logout') }}" class="text-sm font-semibold leading-6 text-gray-900">Log out <span
+                @else
+                    <a href="{{ route('auth') }}" class="text-sm font-semibold leading-6 text-gray-900">Log in</a>
+                @endauth
             </div>
         </nav>
         <!-- Mobile menu, show/hide based on menu open state. -->

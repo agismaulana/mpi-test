@@ -12,32 +12,35 @@
             </div>
         </div>
     </div>
-    <div class="flex h-full align-items-end flex-col bg-white shadow-xl md:col-6">
-        <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
-            <div class="flex items-start justify-between">
-                <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart</h2>
+    <form id="form" method="POST" action="{{ route('checkout.post') }}">
+        @csrf
+        <div class="flex h-full align-items-end flex-col bg-white shadow-xl md:col-6">
+            <div class="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
+                <div class="flex items-start justify-between">
+                    <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart</h2>
+                </div>
+
+                <div class="mt-8">
+                    <div class="flow-root">
+                        <ul role="list" id="checkout" class="-my-6 divide-y divide-gray-200">
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div class="mt-8">
-                <div class="flow-root">
-                    <ul role="list" id="checkout" class="-my-6 divide-y divide-gray-200">
-                    </ul>
+            <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+                <div class="flex justify-between text-base font-medium text-gray-900">
+                    <p>Subtotal</p>
+                    <p>Rp. <span id="total">0</span></p>
+                </div>
+                <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                <div class="mt-6">
+                    <button type="submit"
+                        class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</button>
                 </div>
             </div>
         </div>
-
-        <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-            <div class="flex justify-between text-base font-medium text-gray-900">
-                <p>Subtotal</p>
-                <p>Rp. <span id="total">0</span></p>
-            </div>
-            <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-            <div class="mt-6">
-                <button onclick="checkout()" href="#"
-                    class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</button>
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
 @push('js')
     <script>
@@ -87,31 +90,35 @@
         }
 
         function sendToCart(id, price) {
+            @auth
             let quantity = 1;
-            $.ajax({
-                url: `{{ env('APP_URL') }}/api/add-to-cart`,
-                data: {
-                    'product_id': id,
-                    'quantity': quantity,
-                    'price': price,
-                    'total_price': price*quantity
-                },
-                headers: {
-                    'Authorization': 'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tcGktdGVzdC50ZXN0XC9hcGlcL2xvZ2luIiwiaWF0IjoxNjc3ODI4NjI4LCJleHAiOjE2Nzc4MzIyMjgsIm5iZiI6MTY3NzgyODYyOCwianRpIjoibmlFVnBLTlRaamFUT2JKTSIsInN1YiI6MiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.PQNuLaPho3FUP7TZh7jUgqvK5alkYjGwPzQy6xvGlCs'
-                },
-                method: "POST",
-                dataType: 'JSON',
-                success: function(response) {
-                    getCheckout()
-                }
-            })
+                $.ajax({
+                    url: `{{ env('APP_URL') }}/api/add-to-cart`,
+                    data: {
+                        'product_id': id,
+                        'quantity': quantity,
+                        'price': price,
+                        'total_price': price*quantity
+                    },
+                    headers: {
+                        'Authorization': `bearer {{ auth('web')->user()->getToken() }}`
+                    },
+                    method: "POST",
+                    dataType: 'JSON',
+                    success: function(response) {
+                        getCheckout()
+                    }
+                })
+            @else
+                document.location.href = '{{ route('login') }}'
+            @endauth
         }
 
         function getCheckout() {
             $.ajax({
                 url: `{{ env('APP_URL') }}/api/product-cart`,
                 headers: {
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tcGktdGVzdC50ZXN0XC9hcGlcL2xvZ2luIiwiaWF0IjoxNjc3ODI4NjI4LCJleHAiOjE2Nzc4MzIyMjgsIm5iZiI6MTY3NzgyODYyOCwianRpIjoibmlFVnBLTlRaamFUT2JKTSIsInN1YiI6MiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.PQNuLaPho3FUP7TZh7jUgqvK5alkYjGwPzQy6xvGlCs'
+                    'Authorization': 'Bearer {{ auth('web')->user()->getToken() ?? '' }}'
                 },
                 method: 'GET',
                 dataType: 'JSON',
@@ -133,15 +140,17 @@
                                         <div class="flex justify-between text-base font-medium text-gray-900">
                                             <h3>
                                                 <a href="#">${value.product.title}</a>
-                                                <input type="hidden" name="product[].product_id" value="${value.product.id}">
+                                                <input type="hidden" name="product[][product_id]" value="${value.product.id}">
                                             </h3>
                                             <p class="ml-4">Rp. ${value.product.price}</p>
+                                            <input type="hidden" name="product[][price]" value="${value.product.id}">
                                         </div>
                                         <p class="mt-1 text-sm text-gray-500">${value.product.category}</p>
                                     </div>
                                     <div class="flex flex-1 items-end justify-between text-sm">
                                         <p class="text-gray-500">Qty ${value.quantity}</p>
-                                        <input type="hidden" name="product[].quantity" value="${value.quantity}">
+                                        <input type="hidden" name="product[][quantity]" value="${value.quantity}">
+                                        <input type="hidden" name="product[][total_price]" value="${value.quantity * value.price}">
                                         <div class="flex">
                                             <button type="button"
                                                 class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
@@ -153,40 +162,6 @@
                     })
                     $('#total').html(total)
                     $('#checkout').html(html)
-                }
-            })
-        }
-
-        function checkout() {
-            let total_price = $('#checkout-total_price').val();
-            let checkout_product = $('#checkout-product').val();
-            console.log(total_price, checkout_product)
-            $.ajax({
-                url: `{{ env('APP_URL')}}/api/checkout`,
-                data: {
-                    'total_price': 800000,
-                    'product': [
-                        {
-                            'product_id': 1,
-                            'price': 80000,
-                            'quantity': 2,
-                            'total_price': 160000
-                        },
-                        {
-                            'product_id': 2,
-                            'price': 80000,
-                            'quantity': 2,
-                            'total_price': 160000
-                        },
-                    ]
-                },
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9tcGktdGVzdC50ZXN0XC9hcGlcL2xvZ2luIiwiaWF0IjoxNjc3ODI4NjI4LCJleHAiOjE2Nzc4MzIyMjgsIm5iZiI6MTY3NzgyODYyOCwianRpIjoibmlFVnBLTlRaamFUT2JKTSIsInN1YiI6MiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.PQNuLaPho3FUP7TZh7jUgqvK5alkYjGwPzQy6xvGlCs'
-                },
-                dataType: 'JSON',
-                success: function(response) {
-                    document.href.location = `{{ env('APP_URL') }}/checkout`
                 }
             })
         }
