@@ -22,7 +22,7 @@ class processPaymentSuccessJob extends ProcessWebhookJob implements ShouldQueue
         $data = json_decode($this->webhookCall, true);
         $payload = $data['payload'];
 
-        if($payload['status_code'] == 201 && $payload['transaction_status'] == 'settlement') {
+        if($payload['status_code'] == 200 && $payload['transaction_status'] == 'settlement') {
             $transaction = Transaction::where('code_transaction', $payload['order_id'])->first();
             if($payload['fraud_status'] == 'accept') {
                 $transaction->status = 'success';
@@ -35,9 +35,14 @@ class processPaymentSuccessJob extends ProcessWebhookJob implements ShouldQueue
 
             $payment->status = 'success';
             $payment->save();
+
+            logger($payload['order_id'], $payload);
+            http_response_code(200);
+            return;
         }
 
         logger($payload['order_id'], $payload);
-        http_response_code(200);
+        http_response_code(201);
+        return;
     }
 }
