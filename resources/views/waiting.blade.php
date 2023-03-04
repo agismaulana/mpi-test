@@ -4,7 +4,7 @@
 
 <div class="max-w-sm rounded overflow-hidden mx-auto shadow-lg my-5">
     <div>
-        <p class="text-2xl text-center my-8" id="virtual Account">1231234213124124</p>
+        <p class="text-2xl text-center my-8" id="virtual_account">1231234213124124</p>
     </div>
     <div class="px-6 py-4">
         <div class="font-bold text-xl mb-2 text-center">Menunggu Pembayaran</div>
