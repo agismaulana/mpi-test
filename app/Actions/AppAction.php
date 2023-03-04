@@ -75,7 +75,6 @@ class AppAction {
     public function setMidtransMandiri($request) {
     }
     public function setMidtransPermata($request) {
-
     }
     public function base64SecretKey() {
         $secret_key = env('MIDTRANS_SERVER_KEY');
