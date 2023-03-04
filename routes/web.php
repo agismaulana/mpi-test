@@ -21,6 +21,7 @@ Route::get('/', [PagesController::class, 'home'])->name('home');
 Route::get('/login', [PagesController::class, 'login'])->name('auth');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/login', [LoginController::class, 'web'])->name('login');
+Route::get('/transaction', [PagesController::class, 'transaction'])->name('transaction');
 Route::get('/checkout/{code}', [PagesController::class, 'checkout'])->name('checkout');
 Route::post('/checkout-store', [WebCheckoutController::class, 'store'])->name('checkout.post');
 Route::get('/payment/{code}/waiting', [PagesController::class, 'waiting'])->name('waiting');

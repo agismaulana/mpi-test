@@ -21,4 +21,8 @@ class PagesController extends Controller
     public function waiting(Request $request) {
         return view('waiting');
     }
+
+    public function transaction(Request $request) {
+        return view('transaction');
+    }
 }

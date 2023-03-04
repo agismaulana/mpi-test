@@ -36,7 +36,8 @@
             <div class="hidden lg:flex lg:flex-1 lg:gap-x-12 lg:justify-end">
                 <a href="{{ route('home') }}" class="text-sm font-semibold leading-6 text-gray-900">Products</a>
                 @auth
-                    <a href="{{ route('logout') }}" class="text-sm font-semibold leading-6 text-gray-900">Log out <span
+                    <a href="{{ route('transaction') }}" class="text-sm font-semibold leading-6 text-gray-900">Transaction<span>
+                    <a href="{{ route('logout') }}" class="text-sm font-semibold leading-6 text-gray-900">Log out <span>
                 @else
                     <a href="{{ route('auth') }}" class="text-sm font-semibold leading-6 text-gray-900">Log in</a>
                 @endauth

@@ -43,4 +43,8 @@ class Transaction extends Model
     public function latestPayment() {
         return $this->hasMany(Payment::class, 'transaction_id', 'id')->latest();
     }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }
